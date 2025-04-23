@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+import api from "./http/api";
+import Snackbar from "./Snackbar";
 
 // eslint-disable-next-line react/prop-types
 export default function UserForm({ isEditing = false }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [snackbar, setSnackbar] = useState({
+    message: "",
+    type: "",
+    duration: 0,
+  });
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -13,26 +21,29 @@ export default function UserForm({ isEditing = false }) {
     async function fetchData() {
       if (isEditing) {
         try {
-          const response = await fetch(
-            `http://localhost:3000/api/users/${id}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            },
-          );
-          const data = await response.json();
+          const duration = 10000;
+          const response = await api.get(`/users/${id}`);
 
-          if (response.ok && data.nome && data.email) {
+          const { data, message } = await response;
+
+          if (response.status > 199 && data.nome && data.email) {
             setName(data.nome);
             setEmail(data.email);
+            // console.log("deu certo");
           } else {
-            console.error("Erro ao buscar usuários", data);
+            setSnackbar({
+              message: message || "Erro ao buscar usuarios",
+              type: "error",
+              duration,
+            });
+            // console.error("Erro ao buscar usuários", data);
           }
         } catch (error) {
-          console.error("Erro na requisição", error);
+          setSnackbar({
+            message: error || "Erro na requisição",
+            type: "error",
+          });
+          // console.error("Erro na requisição", error);
         }
       }
     }
@@ -41,24 +52,40 @@ export default function UserForm({ isEditing = false }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = isEditing
-      ? `http://localhost:3000/api/users/${id}`
-      : "http://localhost:3000/api/users";
-    const method = isEditing ? "PUT" : "POST";
+    const url = isEditing ? `/users/${id}` : "/users";
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ name, email, password }),
+    const method = isEditing ? "put" : "post";
+    const response = await api[method](url, {
+      nome: name,
+      email,
+      senha: password,
     });
 
-    if (response.ok) {
-      navigate("/users");
+    // const response = await fetch(url, {
+    //   method,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //   },
+    //   body: JSON.stringify({ name, email, password }),
+    // });
+
+    if (response.data) {
+      setSnackbar({
+        message: "Usuario salvo com sucesso",
+        type: "success",
+        duration: 10000,
+      });
+      setTimeout(() => {
+        navigate("/users");
+      }, 10000);
     } else {
-      console.error("Erro ao salvar usuário");
+      setSnackbar({
+        message: "Erro ao salvar usuário",
+        type: "error",
+        duration: 10000,
+      });
+      // console.error("Erro ao salvar usuário");
     }
   };
 
@@ -101,6 +128,18 @@ export default function UserForm({ isEditing = false }) {
           </button>
         </form>
       </div>
+      <Snackbar
+        message={snackbar.message}
+        type={snackbar.type}
+        onClose={() => setSnackbar({ message: "", type: "" })}
+        duration={snackbar.duration}
+      />
     </div>
   );
 }
+UserForm.propTypes = {
+  isEditing: PropTypes.bool,
+};
+UserForm.defaultProps = {
+  isEditing: false,
+};

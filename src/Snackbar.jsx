@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-function Snackbar({ message, type = "sucess", duration = 3000, onClose }) {
+function Snackbar({ message, type, duration, onClose }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -39,12 +39,12 @@ function Snackbar({ message, type = "sucess", duration = 3000, onClose }) {
 }
 Snackbar.propTypes = {
   message: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(["sucess", "error", "warning", "info"]),
+  type: PropTypes.oneOf(["success", "error", "warning", "info"]),
   duration: PropTypes.number,
   onClose: PropTypes.func,
 };
 Snackbar.defaultProps = {
-  type: "sucess",
+  type: "success",
   duration: 3000,
   onClose: null,
 };

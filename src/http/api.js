@@ -42,7 +42,7 @@ api.interceptors.response.use(
       const { status } = error.response;
 
       // Caso o status seja 401 e o token tenha sido enviado
-      if (status === 201 && originalRequest.headers.Authorization) {
+      if (status === 401 && originalRequest.headers.Authorization) {
         try {
           // Redireciona para o endpoint de refresh-token
           const refreshResponse = await api.post("/refresh-token", {

@@ -25,7 +25,7 @@ export default function Login() {
         setSnackbar({
           message: message || "Login realizado com sucesso",
           type: "success",
-          duration: 1000,
+          duration,
         });
         setTimeout(() => {
           navigate("/home");
@@ -42,6 +42,7 @@ export default function Login() {
       setSnackbar({
         message: message || "Error de conexão",
         type: "error",
+        duration: 10000,
       });
     }
   };

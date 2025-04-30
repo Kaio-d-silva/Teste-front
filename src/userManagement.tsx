@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "./http/api";
 
 interface User {
   id: number;
@@ -14,17 +15,20 @@ export default function UserManagement() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:3000/api/users`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
+        // const response = await fetch(`http://localhost:3000/api/users`, {
+        //   method: "GET",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+        //   },
+        // });
+        // const data = await response.json();
+        
+        const response = await api.get("/users");
+        const data = response.data;
         console.log("usuarios", data);
 
-        if (response.ok && Array.isArray(data)) {
+        if (response.status >= 200 && response.status < 300 && Array.isArray(data)) {
           setUsers(data);
         } else {
           console.error("Erro ao buscar usuários", data);

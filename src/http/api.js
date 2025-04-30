@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Cria uma instancia do axios
 const api = axios.create({
+  // eslint-disable-next-line no-undef
   baseURL: process.env.REACT_APP_API_BASE_URL, // Substitua pela URL da sua API
   headers: {
     "Content-Type": "application/json",

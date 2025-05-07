@@ -10,8 +10,8 @@ interface SnackbarState {
 }
 
 export default function Login() {
-  const [username, setUsername] = useState<string>(""); // Tipagem explícita como string
-  const [password, setPassword] = useState<string>(""); // Tipagem explícita como string
+  const [email, setEmail] = useState<string>(""); // Tipagem explícita como string
+  const [senha, setSenha] = useState<string>(""); // Tipagem explícita como string
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     message: "",
     type: "success",
@@ -27,8 +27,8 @@ export default function Login() {
         refreshToken: string;
         message: string;
       }>("/login", {
-        email: username,
-        senha: password,
+        email,
+        senha,
       });
 
       const { token, refreshToken, message } = response.data;
@@ -44,9 +44,12 @@ export default function Login() {
         navigate("/home");
       }, duration);
     } catch (error: unknown) {
+      const axiosError = error as {
+        response?: { data?: { message?: string } };
+      };
       setSnackbar({
-        // message: error.response?.data?.message || "Erro ao realizar login.",
-        message: `teste ${error}`,
+        message:
+          axiosError.response?.data?.message || "Erro ao realizar login.",
         type: "error",
         duration: 10000,
       });
@@ -59,16 +62,16 @@ export default function Login() {
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         <input
           type="text"
-          placeholder="Usuário"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Digite seu email de login"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 mb-4 border rounded"
         />
         <input
           type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Digite sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
           className="w-full p-2 mb-4 border rounded"
         />
         <button

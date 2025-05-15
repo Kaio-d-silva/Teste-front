@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "./http/api";
+import api from "../http/api";
 
 interface User {
   id: number;
@@ -23,12 +23,16 @@ export default function UserManagement() {
         //   },
         // });
         // const data = await response.json();
-        
+
         const response = await api.get("/users");
         const data = response.data;
         console.log("usuarios", data);
 
-        if (response.status >= 200 && response.status < 300 && Array.isArray(data)) {
+        if (
+          response.status >= 200 &&
+          response.status < 300 &&
+          Array.isArray(data)
+        ) {
           setUsers(data);
         } else {
           console.error("Erro ao buscar usuários", data);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, JSX } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "./http/api";
-import Snackbar from "./Snackbar";
+import api from "../http/api";
+import Snackbar from "../components/Snackbar";
 
 interface SnackbarState {
   message: string;
@@ -14,7 +14,7 @@ interface UserFormParams extends Record<string, string | undefined> {
 }
 
 interface UserFormProps {
-  isEditing: boolean; // Indica se o formulário está no modo de edição
+  isEditing?: boolean; // Indica se o formulário está no modo de edição
 }
 
 function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
@@ -41,9 +41,9 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
           const { nome, email: fetchedEmail } = response.data;
           setName(nome);
           setEmail(fetchedEmail);
-        } catch (error) {
+        } catch {
           setSnackbar({
-            message: `Erro ao carregar os dados do usuário : ${error}`,
+            message: "Erro ao carregar os dados do usuário",
             type: "error",
             duration: 10000,
           });
@@ -76,9 +76,12 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
         });
         navigate("/users");
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      const axiosError = error as {
+        response?: { data?: { message?: string } };
+      };
       setSnackbar({
-        message: `Erro na requisição ${error}`,
+        message: axiosError.response?.data?.message || "Erro na requisição",
         type: "error",
         duration: 10000,
       });

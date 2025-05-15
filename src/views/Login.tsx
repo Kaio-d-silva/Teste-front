@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Snackbar from "./Snackbar";
-import api from "./http/api";
+import Snackbar from "../components/Snackbar";
+import api from "../http/api";
 
 interface SnackbarState {
   message: string;

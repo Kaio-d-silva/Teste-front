@@ -2,7 +2,7 @@ import axios, {
   AxiosInstance,
   AxiosResponse,
   InternalAxiosRequestConfig,
-} from "axios";
+} from 'axios';
 
 // Define a interface para a resposta de erro
 interface ApiError {
@@ -14,7 +14,7 @@ interface ApiError {
 const api: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL, // Substitua pela URL base da sua API
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -22,9 +22,9 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Adiciona o token Bearer ao header Authorization
-    const token = localStorage.getItem("token"); // Substitua pela lógica de onde o token está armazenado
+    const token = localStorage.getItem('token'); // Substitua pela lógica de onde o token está armazenado
     if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
+      config.headers.set('Authorization', `Bearer ${token}`);
     }
     return config;
   },
@@ -51,29 +51,29 @@ api.interceptors.response.use(
         try {
           // Redireciona para o endpoint de refresh-token
           const refreshResponse = await api.post<{ token: string }>(
-            "/refresh-token",
+            '/refresh-token',
             {
-              token: localStorage.getItem("refreshToken"), // Substitua pela lógica do refresh token
+              token: localStorage.getItem('refreshToken'), // Substitua pela lógica do refresh token
             },
           );
 
           // Atualiza o token e refaz a requisição original
           const newToken = refreshResponse.data.token;
-          localStorage.setItem("token", newToken);
+          localStorage.setItem('token', newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return api(originalRequest);
         } catch (refreshError) {
           // Caso o refresh falhe, redirecione para login
-          window.location.href = "/login";
+          window.location.href = '/login';
           return Promise.reject(refreshError);
         }
       }
 
       // Caso o status seja 403
       if (status === 403) {
-        alert("Você não possui acesso a esta tela.");
+        alert('Você não possui acesso a esta tela.');
         window.history.back(); // Redireciona para a última tela visitada
-        const errorAcessoNegado = new Error("Acesso negado.");
+        const errorAcessoNegado = new Error('Acesso negado.');
         (errorAcessoNegado as unknown as ApiError).status = status;
         return Promise.reject(errorAcessoNegado);
       }
@@ -84,7 +84,7 @@ api.interceptors.response.use(
           new Error(
             JSON.stringify({
               status,
-              message: error.response.data?.message || "Erro desconhecido.",
+              message: error.response.data?.message || 'Erro desconhecido.',
             }),
           ),
         );
@@ -96,7 +96,7 @@ api.interceptors.response.use(
       new Error(
         JSON.stringify({
           status: 0,
-          message: "Erro de conexão.",
+          message: 'Erro de conexão.',
         }),
       ),
     );

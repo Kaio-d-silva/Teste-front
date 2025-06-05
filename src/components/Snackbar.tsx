@@ -1,17 +1,17 @@
 /* eslint-disable react/require-default-props */
-import * as React from "react";
-import { useState, useEffect, JSX } from "react";
+import * as React from 'react';
+import { useState, useEffect, JSX } from 'react';
 
 interface SnackbarProps {
   message: string; // Mensagem a ser exibida no Snackbar
-  type?: "success" | "error" | "warning" | "info"; // Tipo do Snackbar
+  type?: 'success' | 'error' | 'warning' | 'info'; // Tipo do Snackbar
   duration?: number; // Duração em milissegundos
   onClose?: () => void; // Função chamada ao fechar o Snackbar
 }
 
 function Snackbar({
   message,
-  type = "success", // Tipo do Snackbar
+  type = 'success', // Tipo do Snackbar
   duration = 10000, // Valor padrão
   onClose = undefined, // Valor padrão
 }: SnackbarProps): JSX.Element | null {
@@ -35,10 +35,10 @@ function Snackbar({
   if (!visible) return null;
 
   const typeStyles: Record<string, string> = {
-    success: "bg-green-500 text-white",
-    error: "bg-red-500 text-white",
-    warning: "bg-yellow-500 text-black",
-    info: "bg-blue-500 text-white",
+    success: 'bg-green-500 text-white',
+    error: 'bg-red-500 text-white',
+    warning: 'bg-yellow-500 text-black',
+    info: 'bg-blue-500 text-white',
   };
 
   return (

@@ -14,7 +14,7 @@ const isAuthenticated = (): boolean => {
       return false;
     }
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Erro ao decodificar o token:', error);
     return false; // Token inválido
   }

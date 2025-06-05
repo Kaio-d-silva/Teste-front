@@ -1,11 +1,11 @@
-import React, { useState, useEffect, JSX } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import api from "../http/api";
-import Snackbar from "../components/Snackbar";
+import React, { useState, useEffect, JSX } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import api from '../http/api';
+import Snackbar from '../components/Snackbar';
 
 interface SnackbarState {
   message: string;
-  type: "success" | "error" | "warning" | "info";
+  type: 'success' | 'error' | 'warning' | 'info';
   duration: number;
 }
 
@@ -18,12 +18,12 @@ interface UserFormProps {
 }
 
 function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [snackbar, setSnackbar] = useState<SnackbarState>({
-    message: "",
-    type: "success",
+    message: '',
+    type: 'success',
     duration: 0,
   });
 
@@ -43,8 +43,8 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
           setEmail(fetchedEmail);
         } catch {
           setSnackbar({
-            message: "Erro ao carregar os dados do usuário",
-            type: "error",
+            message: 'Erro ao carregar os dados do usuário',
+            type: 'error',
             duration: 10000,
           });
         }
@@ -58,8 +58,8 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
     e.preventDefault();
 
     try {
-      const url = isEditing ? `/users/${id}` : "/users";
-      const method = isEditing ? "put" : "post";
+      const url = isEditing ? `/users/${id}` : '/users';
+      const method = isEditing ? 'put' : 'post';
       const response = await api[method](url, {
         nome: name,
         email,
@@ -69,20 +69,20 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
       if (response.status >= 200 && response.status < 300) {
         setSnackbar({
           message: isEditing
-            ? "Usuário atualizado com sucesso"
-            : "Usuário criado com sucesso",
-          type: "success",
+            ? 'Usuário atualizado com sucesso'
+            : 'Usuário criado com sucesso',
+          type: 'success',
           duration: 10000,
         });
-        navigate("/users");
+        navigate('/users');
       }
     } catch (error: unknown) {
       const axiosError = error as {
         response?: { data?: { message?: string } };
       };
       setSnackbar({
-        message: axiosError.response?.data?.message || "Erro na requisição",
-        type: "error",
+        message: axiosError.response?.data?.message || 'Erro na requisição',
+        type: 'error',
         duration: 10000,
       });
     }
@@ -120,13 +120,13 @@ function UserForm({ isEditing = false }: UserFormProps): JSX.Element {
         type="submit"
         className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600"
       >
-        {isEditing ? "Salvar Alterações" : "Criar Usuário"}
+        {isEditing ? 'Salvar Alterações' : 'Criar Usuário'}
       </button>
       <Snackbar
         message={snackbar.message}
         type={snackbar.type}
         duration={snackbar.duration}
-        onClose={() => setSnackbar({ message: "", type: "info", duration: 0 })}
+        onClose={() => setSnackbar({ message: '', type: 'info', duration: 0 })}
       />
     </form>
   );

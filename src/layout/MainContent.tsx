@@ -1,6 +1,6 @@
-import React from "react";
-import TopBar from "./TopBar";
-import ContentArea from "./ContentArea";
+import React from 'react';
+import TopBar from './TopBar';
+import ContentArea from './ContentArea';
 
 interface MainContentProps {
   toggleSidebar: () => void;

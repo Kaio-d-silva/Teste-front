@@ -1,23 +1,57 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Snackbar from "../components/Snackbar";
-import api from "../http/api";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Snackbar from '../components/Snackbar';
+import api from '../http/api';
 
 interface SnackbarState {
   message: string;
-  type?: "success" | "error" | "warning" | "info"; // Torna o tipo opcional
+  type?: 'success' | 'error' | 'warning' | 'info'; // Torna o tipo opcional
   duration: number;
 }
 
 export default function Login() {
-  const [email, setEmail] = useState<string>(""); // Tipagem explícita como string
-  const [senha, setSenha] = useState<string>(""); // Tipagem explícita como string
+  const [email, setEmail] = useState<string>(''); // Tipagem explícita como string
+  const [senha, setSenha] = useState<string>(''); // Tipagem explícita como string
   const [snackbar, setSnackbar] = useState<SnackbarState>({
-    message: "",
-    type: "success",
+    message: '',
+    type: 'success',
     duration: 0,
   });
+  const [emailError, setEmailError] = useState<string>('');
+  const [senhaError, setSenhaError] = useState<string>('');
+
   const navigate = useNavigate();
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateSenha = (senha: string): boolean => {
+    return senha.length >= 6;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    if (!validateEmail(value)) {
+      setEmailError('Email inválido');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handleSenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSenha(value);
+
+    if (!validateSenha(value)) {
+      setSenhaError('A senha deve ter pelo menos 6 caracteres');
+    } else {
+      setSenhaError('');
+    }
+  };
 
   const login = async () => {
     const duration = 10000;
@@ -26,22 +60,22 @@ export default function Login() {
         token: string;
         refreshToken: string;
         message: string;
-      }>("/login", {
+      }>('/login', {
         email,
         senha,
       });
 
       const { token, refreshToken, message } = response.data;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refreshToken);
       setSnackbar({
-        message: message || "Sucesso ao logar.",
-        type: "success",
+        message: message || 'Sucesso ao logar.',
+        type: 'success',
         duration,
       });
       setTimeout(() => {
-        navigate("/home");
+        navigate('/home');
       }, duration);
     } catch (error: unknown) {
       const axiosError = error as {
@@ -49,8 +83,8 @@ export default function Login() {
       };
       setSnackbar({
         message:
-          axiosError.response?.data?.message || "Erro ao realizar login.",
-        type: "error",
+          axiosError.response?.data?.message || 'Erro ao realizar login.',
+        type: 'error',
         duration: 10000,
       });
     }
@@ -64,16 +98,30 @@ export default function Login() {
           type="text"
           placeholder="Digite seu email de login"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          onChange={handleEmailChange}
+          className={`w-full p-2 mb-4 border rounded ${
+            emailError
+              ? 'border-red-500'
+              : email
+                ? 'border-blue-500'
+                : 'border-gray-300'
+          }`}
         />
+        {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
         <input
           type="password"
           placeholder="Digite sua senha"
           value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
+          onChange={handleSenhaChange}
+          className={`w-full p-2 mb-4 border rounded ${
+            senhaError
+              ? 'border-red-500'
+              : senha
+                ? 'border-blue-500'
+                : 'border-gray-300'
+          }`}
         />
+        {senhaError && <p className="text-red-500 text-sm">{senhaError}</p>}
         <button
           type="button"
           onClick={login}
@@ -87,7 +135,7 @@ export default function Login() {
         type={snackbar.type}
         duration={snackbar.duration}
         onClose={() =>
-          setSnackbar({ message: "", type: "success", duration: 0 })
+          setSnackbar({ message: '', type: 'success', duration: 0 })
         }
       />
     </div>

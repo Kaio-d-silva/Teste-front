@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run ESlint",
+      "label": "Run ESLint",
       "type": "shell",
       "command": "npm run lint",
       "group": {
@@ -16,7 +16,7 @@
       "command": "npm run format",
       "group": {
         "kind": "build",
-        "isDefault": true
+        "isDefault": false
       }
     }
   ]

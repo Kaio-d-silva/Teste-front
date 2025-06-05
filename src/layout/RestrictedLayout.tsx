@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import Sidebar from "./Sidebar";
-import { FiHome, FiUsers } from "react-icons/fi";
-import { FaUserPlus } from "react-icons/fa";
-// import { CgUserList } from "react-icons/cg";
-import MainContent from "../components/MainContent";
+import React, { useState } from 'react';
+import Sidebar from './Sidebar';
+import MainContent from './MainContent';
+import { FiHome } from 'react-icons/fi';
+import { TbUsersGroup, TbUsersPlus } from 'react-icons/tb';
 
 const RestrictedLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -13,9 +12,9 @@ const RestrictedLayout: React.FC = () => {
   };
 
   const menuItems = [
-    { path: "/home", label: "Home", icon: <FiHome /> },
-    { path: "/users", label: "Listar Usuarios", icon: <FiUsers /> },
-    { path: "/users/new", label: "Criar Usuario", icon: <FaUserPlus /> },
+    { path: '/home', label: 'Home', icon: <FiHome /> },
+    { path: '/users', label: 'Listar Usuários', icon: <TbUsersGroup /> },
+    { path: '/users/new', label: 'Criar Usuário', icon: <TbUsersPlus /> },
   ];
 
   return (
